@@ -1,0 +1,165 @@
+import React, { useState } from 'react'
+import styled from 'styled-components'
+import { User, LogOut, ChevronDown } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+
+export const Header = () => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const navigate = useNavigate()
+
+  const toggleLogin = () => {
+    if (isLoggedIn) {
+      // Logout logic here
+      setIsLoggedIn(false)
+    } else {
+      // Redirect to signin page
+      navigate('/signin')
+    }
+    setIsDropdownOpen(false)
+  }
+
+  return (
+    <HeaderContainer>
+      <Nav>
+        <NavLinks>
+          <NavLink href="/inventory">Inventory</NavLink>
+          <NavLink href="/characters">Characters</NavLink>
+          <NavLink href="/missions">Missions</NavLink>
+          <NavLink href="/skills">Skills</NavLink>
+          <NavLink href="/npcs">NPCs</NavLink>
+        </NavLinks>
+        <UserMenu onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+          {isLoggedIn ? (
+            <UserAvatar>
+              <img
+                src="/placeholder-user.jpg"
+                alt="User Avatar"
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+            </UserAvatar>
+          ) : (
+            <UserIcon>
+              <User size={24} />
+            </UserIcon>
+          )}
+          <ChevronDown size={16} style={{ color: '#b3a282', marginLeft: '5px' }} />
+          <DropdownMenu isOpen={isDropdownOpen}>
+            {isLoggedIn ? (
+              <>
+                <DropdownItem>My Profile</DropdownItem>
+                <DropdownItem onClick={toggleLogin}>
+                  <LogOut size={16} />
+                  Logout
+                </DropdownItem>
+              </>
+            ) : (
+              <DropdownItem onClick={toggleLogin}>Login</DropdownItem>
+            )}
+          </DropdownMenu>
+        </UserMenu>
+      </Nav>
+    </HeaderContainer>
+  )
+}
+
+const HeaderContainer = styled.header`
+  background: linear-gradient(to bottom, #2c2416 0%, #1a1610 100%);
+  padding: 10px 0;
+  border-bottom: 2px solid #3d3425;
+`
+
+const Nav = styled.nav`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+`
+
+const NavLinks = styled.div`
+  display: flex;
+`
+
+const NavLink = styled.a`
+  color: #b3a282;
+  text-decoration: none;
+  padding: 10px 20px;
+  font-family: 'MedievalSharp', cursive;
+  font-size: 18px;
+  position: relative;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: #d4c4a1;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: #6d5d3f;
+    transition: width 0.3s ease;
+  }
+
+  &:hover::after {
+    width: 80%;
+  }
+`
+
+const UserMenu = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+`
+
+const UserIcon = styled.div`
+  color: #b3a282;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  &:hover {
+    color: #d4c4a1;
+  }
+`
+
+const UserAvatar = styled.div`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #b3a282;
+`
+
+const DropdownMenu = styled.div`
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: #2c2416;
+  border: 1px solid #3d3425;
+  border-radius: 5px;
+  display: ${props => (props.isOpen ? 'block' : 'none')};
+  z-index: 10;
+`
+
+const DropdownItem = styled.div`
+  color: #b3a282;
+  padding: 10px 20px;
+  font-family: 'MedievalSharp', cursive;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  &:hover {
+    background-color: #3d3425;
+  }
+`

@@ -1,50 +1,25 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Link } from 'react-router-dom'
+import { Header } from '../components/Header'
 
-const HeaderContainer = styled.header`
-  background: linear-gradient(to bottom, #2c2416 0%, #1a1610 100%);
-  padding: 10px 0;
-  border-bottom: 2px solid #3d3425;
-`
-
-const Nav = styled.nav`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
-`
-
-const NavLink = styled(Link)`
-  color: #b3a282;
-  text-decoration: none;
-  padding: 10px 20px;
-  font-family: 'MedievalSharp', cursive;
-  font-size: 18px;
-  position: relative;
-  transition: color 0.3s ease;
-
-  &:hover {
-    color: #d4c4a1;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 2px;
-    background: #6d5d3f;
-    transition: width 0.3s ease;
-  }
-
-  &:hover::after {
-    width: 80%;
-  }
-`
+export default function RPGManager() {
+  return (
+    <PageContainer>
+      <Header />
+      <Content>
+        <Title>Welcome to Your RPG Adventure</Title>
+        <Section>
+          <SectionTitle>Character Overview</SectionTitle>
+          <p>Here you can view and manage your character's details, inventory, and progress.</p>
+        </Section>
+        <Section>
+          <SectionTitle>Recent Activities</SectionTitle>
+          <p>Your latest quests, battles, and achievements will be displayed here.</p>
+        </Section>
+      </Content>
+    </PageContainer>
+  )
+}
 
 const PageContainer = styled.div`
   background-color: #0f0d0a;
@@ -81,30 +56,3 @@ const SectionTitle = styled.h2`
   border-bottom: 1px solid #3d3425;
   padding-bottom: 10px;
 `
-
-export default function RPGManager() {
-  return (
-    <PageContainer>
-      <HeaderContainer>
-        <Nav>
-          <NavLink href="/inventory">Inventory</NavLink>
-          <NavLink href="/characteristics">Characteristics</NavLink>
-          <NavLink href="/reactions">Reactions</NavLink>
-          <NavLink href="/proficiencies">Proficiencies</NavLink>
-          <NavLink href="/statistics">Statistics</NavLink>
-        </Nav>
-      </HeaderContainer>
-      <Content>
-        <Title>Welcome to Your RPG Adventure</Title>
-        <Section>
-          <SectionTitle>Character Overview</SectionTitle>
-          <p>Here you can view and manage your character's details, inventory, and progress.</p>
-        </Section>
-        <Section>
-          <SectionTitle>Recent Activities</SectionTitle>
-          <p>Your latest quests, battles, and achievements will be displayed here.</p>
-        </Section>
-      </Content>
-    </PageContainer>
-  )
-}
