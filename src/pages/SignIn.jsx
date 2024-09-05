@@ -1,22 +1,43 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import styled from 'styled-components'
-import { User, Lock } from 'lucide-react'
-
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import AuthContext from '../functions/context';
+import { User, Lock } from 'lucide-react';
 
 export default function LoginPage() {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const { setUser } = useContext(AuthContext); 
+  const navigate = useNavigate();
+  const url = import.meta.env.VITE_API_URL; 
+  const handleSignIn = async (e) => {
+    e.preventDefault();
+    const loginData = { nome: username, senha: password }; 
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log('Login attempted with:', { username, password })
-  }
+    try {
+      const res = await axios.post(`${url}/login`, loginData); 
+      const newUser = {
+        token: res.data.token,
+        username: res.data.username,
+        foto: res.data.foto
+      };
+
+      setUser(newUser);
+      localStorage.setItem("user", JSON.stringify(newUser));
+      navigate("/"); 
+
+    } catch (error) {
+      console.error('Erro ao realizar login:', error);
+      alert('Erro ao realizar login. Verifique suas credenciais.');
+    }
+  };
 
   return (
     <PageContainer>
       <LoginCard>
         <Title>Enter the Realm</Title>
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSignIn}>
           <InputGroup>
             <Input
               type="text"
@@ -51,21 +72,17 @@ export default function LoginPage() {
   )
 }
 
-
-
+// Estilos mantidos os mesmos, mas você pode ajustar conforme necessário
 const PageContainer = styled.div`
   background-color: #0f0d0a;
-  height: 100vh; 
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   font-family: 'MedievalSharp', cursive;
-`
+`;
 
 const LoginCard = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
   background: rgba(44, 36, 22, 0.9);
   border: 2px solid #3d3425;
   border-radius: 8px;
@@ -75,35 +92,34 @@ const LoginCard = styled.div`
   min-width: 300px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   text-align: center;
-`
+`;
 
 const Title = styled.h1`
   color: #d4c4a1;
   font-size: 28px;
   text-align: center;
   margin-bottom: 24px;
-`
+`;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 20px;
-`
+`;
 
 const InputGroup = styled.div`
   position: relative;
-  width: 100%;
-`
+`;
 
 const Input = styled.input`
   width: 100%;
-  padding: 10px;
+  padding: 10px 40px 10px 10px;
   background-color: rgba(179, 162, 130, 0.1);
   border: 1px solid #3d3425;
   border-radius: 4px;
   color: #d4c4a1;
   font-size: 16px;
+  outline: none;
   transition: border-color 0.3s ease;
 
   &:focus {
@@ -113,7 +129,7 @@ const Input = styled.input`
   &::placeholder {
     color: #8a7b5c;
   }
-`
+`;
 
 const InputIcon = styled.span`
   position: absolute;
@@ -121,10 +137,9 @@ const InputIcon = styled.span`
   top: 50%;
   transform: translateY(-50%);
   color: #8a7b5c;
-`
+`;
 
 const Button = styled.button`
-    width: 100%;
   background: linear-gradient(to bottom, #6d5d3f 0%, #4a3f2b 100%);
   color: #d4c4a1;
   border: none;
@@ -142,7 +157,7 @@ const Button = styled.button`
     outline: 2px solid #b3a282;
     outline-offset: 2px;
   }
-`
+`;
 
 const ForgotPassword = styled.a`
   color: #b3a282;
@@ -155,4 +170,4 @@ const ForgotPassword = styled.a`
   &:hover {
     text-decoration: underline;
   }
-`
+`;

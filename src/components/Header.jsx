@@ -1,22 +1,23 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import styled from 'styled-components'
 import { User, LogOut, ChevronDown } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import AuthContext from '../functions/context'
 
 export const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const { user, setUser } = useContext(AuthContext); 
   const navigate = useNavigate()
 
-  const toggleLogin = () => {
-    if (isLoggedIn) {
-      // Logout logic here
-      setIsLoggedIn(false)
-    } else {
-      // Redirect to signin page
-      navigate('/signin')
-    }
-    setIsDropdownOpen(false)
+  const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem('user');
+    localStorage.removeItem('idUser');
+    navigate('/signin');
+  }
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
   }
 
   return (
@@ -29,11 +30,11 @@ export const Header = () => {
           <NavLink href="/skills">Skills</NavLink>
           <NavLink href="/npcs">NPCs</NavLink>
         </NavLinks>
-        <UserMenu onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-          {isLoggedIn ? (
+        <UserMenu onClick={toggleDropdown}>
+          {user ? ( // Verifica se o usuário está logado
             <UserAvatar>
               <img
-                src="/placeholder-user.jpg"
+                src={user.foto ? `data:image/jpeg;base64,${user.foto}` : "/placeholder-user.jpg"}
                 alt="User Avatar"
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
               />
@@ -45,16 +46,16 @@ export const Header = () => {
           )}
           <ChevronDown size={16} style={{ color: '#b3a282', marginLeft: '5px' }} />
           <DropdownMenu isOpen={isDropdownOpen}>
-            {isLoggedIn ? (
+            {user ? ( 
               <>
                 <DropdownItem>My Profile</DropdownItem>
-                <DropdownItem onClick={toggleLogin}>
+                <DropdownItem onClick={handleLogout}>
                   <LogOut size={16} />
                   Logout
                 </DropdownItem>
               </>
             ) : (
-              <DropdownItem onClick={toggleLogin}>Login</DropdownItem>
+              <DropdownItem onClick={() => navigate('/signin')}>Login</DropdownItem>
             )}
           </DropdownMenu>
         </UserMenu>
