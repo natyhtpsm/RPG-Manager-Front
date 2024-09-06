@@ -3,6 +3,7 @@ import { Route, BrowserRouter, Routes } from 'react-router-dom'
 import RPGManager from './pages/Homepage.jsx';
 import SignIn from './pages/SignIn.jsx';
 import AuthContext from './functions/context.jsx';
+import SignUpPage from './pages/SignUp.jsx';
 
 function App() {
   const [user, setUser] = useState(0);
@@ -14,6 +15,7 @@ function App() {
           <Routes>
             <Route path="/" element={<RPGManager />} />
             <Route path="/signin" element={<SignIn />} />
+            <Route path="/signup" element={<SignUpPage />} />
           </Routes>
         </BrowserRouter>
       </AuthContext.Provider>

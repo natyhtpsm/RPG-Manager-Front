@@ -1,43 +1,58 @@
-import React, { useState, useContext } from 'react'
-import styled from 'styled-components'
+import React, { useState, useContext } from 'react';
+import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import AuthContext from '../functions/context.jsx';
-import { User, Lock } from 'lucide-react';
+import AuthContext from '../functions/context';
+import { User, Lock, Image as ImageIcon } from 'lucide-react';
 
-export default function LoginPage() {
+export default function SignUpPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [profileImage, setProfileImage] = useState(null); 
   const { setUser } = useContext(AuthContext); 
   const navigate = useNavigate();
-  const url = import.meta.env.VITE_API_URL; 
-  const handleSignIn = async (e) => {
+  const url = import.meta.env.VITE_API_URL;
+
+  const handleImageUpload = (e) => {
+    setProfileImage(e.target.files[0]);
+  };
+
+  const handleSignUp = async (e) => {
     e.preventDefault();
-    const loginData = { nome: username, senha: password }; 
+
+    const formData = new FormData();  
+    formData.append('nome', username);
+    formData.append('senha', password);
+    formData.append('foto', profileImage); 
 
     try {
-      const res = await axios.post(`${url}/login`, loginData); 
+      const res = await axios.post(`${url}/sign-up`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
       const newUser = {
         token: res.data.token,
         username: res.data.username,
-        foto: res.data.foto
+        foto: res.data.foto,
       };
 
       setUser(newUser);
       localStorage.setItem("user", JSON.stringify(newUser));
-      navigate("/"); 
+      navigate("/signin");
 
     } catch (error) {
-      console.error('Erro ao realizar login:', error);
-      alert('Erro ao realizar login. Verifique suas credenciais.');
+      console.error('Erro ao realizar cadastro:', error);
+      alert('Erro ao realizar cadastro. Verifique suas informações.');
     }
   };
 
   return (
     <PageContainer>
-      <LoginCard>
-        <Title>Enter the Realm</Title>
-        <Form onSubmit={handleSignIn}>
+      <SignUpCard>
+        <Title>Create an Account</Title>
+        <Form onSubmit={handleSignUp}>
           <InputGroup>
             <Input
               type="text"
@@ -64,13 +79,24 @@ export default function LoginPage() {
               <Lock size={20} />
             </InputIcon>
           </InputGroup>
-          <Button type="submit">Embark</Button>
+          <InputGroup>
+            <Input
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload} 
+              required
+              aria-label="Profile Image"
+            />
+            <InputIcon>
+              <ImageIcon size={20} />
+            </InputIcon>
+          </InputGroup>
+          <Button type="submit">Create Account</Button>
         </Form>
-        <ForgotPassword href="/forgot-password">Forgot your enchanted words?</ForgotPassword>
-        <ForgotPassword href="/signup">Create a new account</ForgotPassword>    
-      </LoginCard>
+        <ForgotPassword href="/signin">Already have an account? Sign In</ForgotPassword>
+      </SignUpCard>
     </PageContainer>
-  )
+  );
 }
 
 const PageContainer = styled.div`
@@ -82,7 +108,7 @@ const PageContainer = styled.div`
   font-family: 'MedievalSharp', cursive;
 `;
 
-const LoginCard = styled.div`
+const SignUpCard = styled.div`
   background: rgba(44, 36, 22, 0.9);
   border: 2px solid #3d3425;
   border-radius: 8px;
