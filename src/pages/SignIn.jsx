@@ -72,7 +72,6 @@ export default function LoginPage() {
   )
 }
 
-// Estilos mantidos os mesmos, mas você pode ajustar conforme necessário
 const PageContainer = styled.div`
   background-color: #0f0d0a;
   height: 100vh;

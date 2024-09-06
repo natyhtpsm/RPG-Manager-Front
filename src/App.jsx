@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Route, BrowserRouter, Routes } from 'react-router-dom'
 import RPGManager from './pages/Homepage.jsx';
 import SignIn from './pages/SignIn.jsx';
-import AuthContext from './functions/context.js';
+import AuthContext from './functions/context.jsx';
 
 function App() {
   const [user, setUser] = useState(0);

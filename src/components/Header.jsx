@@ -1,24 +1,31 @@
-import React, { useState, useContext } from 'react'
-import styled from 'styled-components'
-import { User, LogOut, ChevronDown } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import AuthContext from '../functions/context'
+import React, { useState, useContext, useEffect } from 'react';
+import styled from 'styled-components';
+import { User, LogOut, ChevronDown } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import AuthContext from '../functions/context.jsx';
 
 export const Header = () => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { user, setUser } = useContext(AuthContext); 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser && !user) {
+      setUser(JSON.parse(storedUser));  
+    }
+  }, [user, setUser]);
 
   const handleLogout = () => {
     setUser(null);
-    localStorage.removeItem('user');
+    localStorage.removeItem('user');  
     localStorage.removeItem('idUser');
-    navigate('/signin');
-  }
+    navigate('/signin'); 
+  };
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
-  }
+  };
 
   return (
     <HeaderContainer>
@@ -31,7 +38,7 @@ export const Header = () => {
           <NavLink href="/npcs">NPCs</NavLink>
         </NavLinks>
         <UserMenu onClick={toggleDropdown}>
-          {user ? ( // Verifica se o usuário está logado
+          {user ? (
             <UserAvatar>
               <img
                 src={user.foto ? `data:image/jpeg;base64,${user.foto}` : "/placeholder-user.jpg"}
@@ -61,14 +68,14 @@ export const Header = () => {
         </UserMenu>
       </Nav>
     </HeaderContainer>
-  )
-}
+  );
+};
 
 const HeaderContainer = styled.header`
   background: linear-gradient(to bottom, #2c2416 0%, #1a1610 100%);
   padding: 10px 0;
   border-bottom: 2px solid #3d3425;
-`
+`;
 
 const Nav = styled.nav`
   display: flex;
@@ -77,11 +84,11 @@ const Nav = styled.nav`
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
-`
+`;
 
 const NavLinks = styled.div`
   display: flex;
-`
+`;
 
 const NavLink = styled.a`
   color: #b3a282;
@@ -111,14 +118,14 @@ const NavLink = styled.a`
   &:hover::after {
     width: 80%;
   }
-`
+`;
 
 const UserMenu = styled.div`
   position: relative;
   display: flex;
   align-items: center;
   cursor: pointer;
-`
+`;
 
 const UserIcon = styled.div`
   color: #b3a282;
@@ -129,7 +136,7 @@ const UserIcon = styled.div`
   &:hover {
     color: #d4c4a1;
   }
-`
+`;
 
 const UserAvatar = styled.div`
   width: 40px;
@@ -137,7 +144,7 @@ const UserAvatar = styled.div`
   border-radius: 50%;
   overflow: hidden;
   border: 2px solid #b3a282;
-`
+`;
 
 const DropdownMenu = styled.div`
   position: absolute;
@@ -148,7 +155,7 @@ const DropdownMenu = styled.div`
   border-radius: 5px;
   display: ${props => (props.isOpen ? 'block' : 'none')};
   z-index: 10;
-`
+`;
 
 const DropdownItem = styled.div`
   color: #b3a282;
@@ -163,4 +170,4 @@ const DropdownItem = styled.div`
   &:hover {
     background-color: #3d3425;
   }
-`
+`;
