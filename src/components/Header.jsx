@@ -31,9 +31,10 @@ export const Header = () => {
     <HeaderContainer>
       <Nav>
         <NavLinks>
-          <NavLink href="/inventory">Inventory</NavLink>
-          <NavLink href="/characters">Characters</NavLink>
-          <NavLink href="/missions">Missions</NavLink>
+          <NavLink href="/">Home</NavLink>
+          <NavLink href="/lore">Lore</NavLink>
+          <NavLink href="/classes">Classes</NavLink>
+          <NavLink href="/quests">Missions</NavLink>
           <NavLink href="/skills">Skills</NavLink>
           <NavLink href="/npcs">NPCs</NavLink>
         </NavLinks>
@@ -55,7 +56,10 @@ export const Header = () => {
           <DropdownMenu isOpen={isDropdownOpen}>
             {user ? ( 
               <>
-                <DropdownItem>My Profile</DropdownItem>
+                <DropdownItem>Profile</DropdownItem>
+                <DropdownItem>Characters</DropdownItem>
+                <DropdownItem>Inventory</DropdownItem>
+                <DropdownItem>Quests</DropdownItem>
                 <DropdownItem onClick={handleLogout}>
                   <LogOut size={16} />
                   Logout

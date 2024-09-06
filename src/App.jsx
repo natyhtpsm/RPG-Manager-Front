@@ -4,6 +4,7 @@ import RPGManager from './pages/Homepage.jsx';
 import SignIn from './pages/SignIn.jsx';
 import AuthContext from './functions/context.jsx';
 import SignUpPage from './pages/SignUp.jsx';
+import NPCPage from './pages/Npcs.jsx';
 
 function App() {
   const [user, setUser] = useState(0);
@@ -16,6 +17,7 @@ function App() {
             <Route path="/" element={<RPGManager />} />
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/npcs" element={<NPCPage />} />
           </Routes>
         </BrowserRouter>
       </AuthContext.Provider>
