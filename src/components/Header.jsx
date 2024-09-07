@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { User, LogOut, ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../functions/context.jsx';
+import { Link } from 'react-router-dom';
 
 export const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -54,17 +55,17 @@ export const Header = () => {
           <DropdownMenu isOpen={isDropdownOpen}>
             {user ? ( 
               <>
-                <DropdownItem href="/profile">Profile</DropdownItem>
-                <DropdownItem href="/characters">Characters</DropdownItem>
-                <DropdownItem href="/inventory">Inventory</DropdownItem>
-                <DropdownItem href="/quests">Quests</DropdownItem>
+                <DropdownItem to="/profile">Profile</DropdownItem>
+                <DropdownItem to="/characters">Characters</DropdownItem>
+                <DropdownItem to="/inventory">Inventory</DropdownItem>
+                <DropdownItem to="/quests">Quests</DropdownItem>
                 <DropdownItem onClick={handleLogout}>
                   <LogOut size={16} />
                   Logout
                 </DropdownItem>
               </>
             ) : (
-              <DropdownItem onClick={() => navigate('/signin')}>Login</DropdownItem>
+              <DropdownItem to="/signin">Login</DropdownItem>
             )}
           </DropdownMenu>
         </UserMenu>
@@ -159,7 +160,7 @@ const DropdownMenu = styled.div`
   z-index: 10;
 `;
 
-const DropdownItem = styled.div`
+const DropdownItem = styled(Link)`
   color: #b3a282;
   padding: 10px 20px;
   font-family: 'MedievalSharp', cursive;
