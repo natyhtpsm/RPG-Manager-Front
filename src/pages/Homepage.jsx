@@ -123,7 +123,7 @@ const PageContainer = styled.div`
   min-height: 100vh;
   color: #b3a282;
   font-family: 'MedievalSharp', cursive;
-  padding: 40px 20px;
+  padding: 40px 20%;
 `
 
 const Title = styled.h1`
