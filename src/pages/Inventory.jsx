@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { ChevronDown } from 'lucide-react'
+import { Header } from '../components/Header'
 
 const characters = [
   { id: 1, name: 'Eldrin' },
@@ -23,39 +24,42 @@ export default function CharacterInventoryPage() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
   return (
-    <PageContainer>
-      <Title>Character Inventory</Title>
-      <CharacterSelect>
-        <SelectButton onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-          {selectedCharacter.name}
-          <ChevronDown size={20} />
-        </SelectButton>
-        {isDropdownOpen && (
-          <DropdownList>
-            {characters.map((character) => (
-              <DropdownItem
-                key={character.id}
-                onClick={() => {
-                  setSelectedCharacter(character)
-                  setIsDropdownOpen(false)
-                }}
-              >
-                {character.name}
-              </DropdownItem>
-            ))}
-          </DropdownList>
-        )}
-      </CharacterSelect>
-      <InventoryGrid>
-        {inventoryItems.map((item) => (
-          <ItemCard key={item.id}>
-            <ItemImage src={item.image} alt={item.name} />
-            <ItemName>{item.name}</ItemName>
-            <ItemDescription>{item.description}</ItemDescription>
-          </ItemCard>
-        ))}
-      </InventoryGrid>
-    </PageContainer>
+    <>
+        <Header />
+        <PageContainer>
+            <Title>Character Inventory</Title>
+            <CharacterSelect>
+                <SelectButton onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+                {selectedCharacter.name}
+                <ChevronDown size={20} />
+                </SelectButton>
+                {isDropdownOpen && (
+                <DropdownList>
+                    {characters.map((character) => (
+                    <DropdownItem
+                        key={character.id}
+                        onClick={() => {
+                        setSelectedCharacter(character)
+                        setIsDropdownOpen(false)
+                        }}
+                    >
+                        {character.name}
+                    </DropdownItem>
+                    ))}
+                </DropdownList>
+                )}
+            </CharacterSelect>
+            <InventoryGrid>
+                {inventoryItems.map((item) => (
+                <ItemCard key={item.id}>
+                    <ItemImage src={item.image} alt={item.name} />
+                    <ItemName>{item.name}</ItemName>
+                    <ItemDescription>{item.description}</ItemDescription>
+                </ItemCard>
+                ))}
+            </InventoryGrid>
+        </PageContainer>      
+    </>
   );
 };
 
