@@ -8,6 +8,84 @@ import AuthContext from '../functions/context.jsx';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
+export default function PlayerCharactersPage() {
+  const [characters, setCharacters] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
+  const { user, setUser } = useContext(AuthContext);
+
+  useEffect(() => {
+    const fetchCharacters = async () => {
+      try {
+        const storedUser = localStorage.getItem('user');
+        const token = storedUser ? JSON.parse(storedUser).token : null; // Pega o token do localStorage
+
+        if (!token) {
+          setErrorMessage('Usuário não autenticado');
+          return;
+        }
+
+        const response = await axios.get(`${apiUrl}/personagens`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Usa o token no cabeçalho da requisição
+          },
+        });
+        setCharacters(response.data);
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          setErrorMessage('Você ainda não tem personagens');
+        } else {
+          setErrorMessage('Erro ao buscar personagens');
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCharacters();
+  }, [user]);
+
+  if (loading) {
+    return (
+      <PageContainer>
+        <Title>Carregando...</Title>
+      </PageContainer>
+    );
+  }
+
+  return (
+    <>
+      <Header />
+      <PageContainer>
+        <Title>Seus Personagens</Title>
+        {errorMessage ? (
+          <Title>{errorMessage}</Title>
+        ) : (
+          <CharactersGrid>
+            {characters.map((character) => (
+              <CharacterCard key={character.id}>
+                <CharacterImage
+                  src={`data:image/jpeg;base64,${character.foto}`} // Supondo que a foto esteja em base64
+                  alt={character.nome}
+                />
+                <CharacterName>{character.nome}</CharacterName>
+                <CharacterInfo>
+                  {character.nome_classe} - Nível {character.nivel}
+                </CharacterInfo>
+              </CharacterCard>
+            ))}
+          </CharactersGrid>
+        )}
+        <CreateButton to="/create">
+          <Plus size={24} style={{ marginRight: '10px' }} />
+          Criar Novo Personagem
+        </CreateButton>
+      </PageContainer>
+    </>
+  );
+}
+
+
 const PageContainer = styled.div`
   background-color: #0f0d0a;
   min-height: 100vh;
@@ -87,80 +165,3 @@ const CreateButton = styled(Link)`
     outline-offset: 2px;
   }
 `;
-
-export default function PlayerCharactersPage() {
-  const [characters, setCharacters] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState('');
-  const { user, setUser } = useContext(AuthContext);
-
-  useEffect(() => {
-    const fetchCharacters = async () => {
-      try {
-        const storedUser = localStorage.getItem('user');
-        const token = storedUser ? JSON.parse(storedUser).token : null; // Pega o token do localStorage
-
-        if (!token) {
-          setErrorMessage('Usuário não autenticado');
-          return;
-        }
-
-        const response = await axios.get(`${apiUrl}/personagens`, {
-          headers: {
-            Authorization: `Bearer ${token}`, // Usa o token no cabeçalho da requisição
-          },
-        });
-        setCharacters(response.data);
-      } catch (error) {
-        if (error.response && error.response.status === 404) {
-          setErrorMessage('Você ainda não tem personagens');
-        } else {
-          setErrorMessage('Erro ao buscar personagens');
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCharacters();
-  }, [user]);
-
-  if (loading) {
-    return (
-      <PageContainer>
-        <Title>Carregando...</Title>
-      </PageContainer>
-    );
-  }
-
-  return (
-    <>
-      <Header />
-      <PageContainer>
-        <Title>Seus Personagens</Title>
-        {errorMessage ? (
-          <Title>{errorMessage}</Title>
-        ) : (
-          <CharactersGrid>
-            {characters.map((character) => (
-              <CharacterCard key={character.id}>
-                <CharacterImage
-                  src={`data:image/jpeg;base64,${character.foto}`} // Supondo que a foto esteja em base64
-                  alt={character.nome}
-                />
-                <CharacterName>{character.nome}</CharacterName>
-                <CharacterInfo>
-                  {character.nome_classe} - Nível {character.nivel}
-                </CharacterInfo>
-              </CharacterCard>
-            ))}
-          </CharactersGrid>
-        )}
-        <CreateButton to="/create">
-          <Plus size={24} style={{ marginRight: '10px' }} />
-          Criar Novo Personagem
-        </CreateButton>
-      </PageContainer>
-    </>
-  );
-}
