@@ -34,8 +34,6 @@ export const Header = () => {
           <NavLink href="/">Home</NavLink>
           <NavLink href="/lore">Lore</NavLink>
           <NavLink href="/classes">Classes</NavLink>
-          <NavLink href="/quests">Missions</NavLink>
-          <NavLink href="/skills">Skills</NavLink>
           <NavLink href="/npcs">NPCs</NavLink>
         </NavLinks>
         <UserMenu onClick={toggleDropdown}>
