@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { User, Camera, ChevronDown } from 'lucide-react'
+import { Header } from '../components/Header'
 
 export default function CreateCharacterPage() {
   const [name, setName] = useState('')
@@ -24,53 +25,56 @@ export default function CreateCharacterPage() {
   }
 
   return (
-    <PageContainer>
-      <Title>Create New Character</Title>
-      <Form onSubmit={handleSubmit}>
-        <ImageUploadLabel htmlFor="character-image">
-          {image ? (
-            <ImagePreview src={image} alt="Character Preview" />
-          ) : (
-            <Camera size={40} color="#8a7b5c" />
-          )}
-        </ImageUploadLabel>
-        <ImageUploadInput
-          id="character-image"
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-        />
-        <InputGroup>
-          <Input
-            type="text"
-            placeholder="Character Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-          <InputIcon>
-            <User size={20} />
-          </InputIcon>
-        </InputGroup>
-        <SelectWrapper>
-          <Select
-            value={characterClass}
-            onChange={(e) => setCharacterClass(e.target.value)}
-            required
-          >
-            <option value="">Select Class</option>
-            <option value="Warrior">Warrior</option>
-            <option value="Mage">Mage</option>
-            <option value="Rogue">Rogue</option>
-            <option value="Cleric">Cleric</option>
-            <option value="Ranger">Ranger</option>
-          </Select>
-        </SelectWrapper>
-        <Button type="submit">Create Character</Button>
-      </Form>
-    </PageContainer>
-  )
-}
+    <>
+        <Header />
+        <PageContainer>
+            <Title>Create New Character</Title>
+            <Form onSubmit={handleSubmit}>
+                <ImageUploadLabel htmlFor="character-image">
+                {image ? (
+                    <ImagePreview src={image} alt="Character Preview" />
+                ) : (
+                    <Camera size={40} color="#8a7b5c" />
+                )}
+                </ImageUploadLabel>
+                <ImageUploadInput
+                id="character-image"
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                />
+                <InputGroup>
+                <Input
+                    type="text"
+                    placeholder="Character Name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                />
+                <InputIcon>
+                    <User size={20} />
+                </InputIcon>
+                </InputGroup>
+                <SelectWrapper>
+                <Select
+                    value={characterClass}
+                    onChange={(e) => setCharacterClass(e.target.value)}
+                    required
+                >
+                    <option value="">Select Class</option>
+                    <option value="Warrior">Warrior</option>
+                    <option value="Mage">Mage</option>
+                    <option value="Rogue">Rogue</option>
+                    <option value="Cleric">Cleric</option>
+                    <option value="Ranger">Ranger</option>
+                </Select>
+                </SelectWrapper>
+                <Button type="submit">Create Character</Button>
+            </Form>
+        </PageContainer>
+    </>
+  );
+};
 
 const PageContainer = styled.div`
   background-color: #0f0d0a;
