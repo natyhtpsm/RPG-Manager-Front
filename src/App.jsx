@@ -9,6 +9,7 @@ import LorePage from './pages/Lore.jsx';
 import ClassesPage from './pages/Classes.jsx';
 import PlayerProfilePage from './pages/Profile.jsx';
 import PlayerCharactersPage from './pages/Characters.jsx';
+import CharacterInventoryPage from './pages/Inventory.jsx';
 
 function App() {
   const [user, setUser] = useState(0);
@@ -26,6 +27,7 @@ function App() {
             <Route path="/classes" element={<ClassesPage />} />
             <Route path="/profile" element={<PlayerProfilePage />} />
             <Route path="/characters" element={<PlayerCharactersPage />} />
+            <Route path="/inventory" element={<CharacterInventoryPage />} />
           </Routes>
         </BrowserRouter>
       </AuthContext.Provider>
