@@ -11,6 +11,7 @@ import PlayerProfilePage from './pages/Profile.jsx';
 import PlayerCharactersPage from './pages/Characters.jsx';
 import CharacterInventoryPage from './pages/Inventory.jsx';
 import CreateCharacterPage from './pages/NewCharacter.jsx';
+import MissionsPage from './pages/Quests.jsx';
 
 function App() {
   const [user, setUser] = useState(0);
@@ -30,6 +31,7 @@ function App() {
             <Route path="/characters" element={<PlayerCharactersPage />} />
             <Route path="/inventory" element={<CharacterInventoryPage />} />
             <Route path="/create" element={<CreateCharacterPage />} />
+            <Route path="/quests" element={<MissionsPage />} />
           </Routes>
         </BrowserRouter>
       </AuthContext.Provider>
