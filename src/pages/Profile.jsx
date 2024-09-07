@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
-import { User, Lock, Camera } from 'lucide-react'
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { User, Lock, Camera } from 'lucide-react';
+import { Header } from '../components/Header.jsx'
 
 export default function PlayerProfilePage() {
   const [profilePicture, setProfilePicture] = useState('/placeholder.svg?height=150&width=150')
@@ -24,50 +25,54 @@ export default function PlayerProfilePage() {
   }
 
   return (
-    <PageContainer>
-      <Title>Player Profile</Title>
-      <ProfileContainer>
-        <ProfilePictureContainer>
-          <ProfilePicture src={profilePicture} alt="Player Avatar" />
-          <PictureUploadLabel htmlFor="picture-upload">
-            <Camera size={20} color="#d4c4a1" />
-          </PictureUploadLabel>
-          <PictureUploadInput
-            id="picture-upload"
-            type="file"
-            accept="image/*"
-            onChange={handlePictureChange}
-          />
-        </ProfilePictureContainer>
-        <Form onSubmit={handleSubmit}>
-          <InputGroup>
-            <Input
-              type="password"
-              placeholder="New Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
+    <>
+        <Header />
+        <PageContainer>
+        <Title>Player Profile</Title>
+        <ProfileContainer>
+            <ProfilePictureContainer>
+            <ProfilePicture src={profilePicture} alt="Player Avatar" />
+            <PictureUploadLabel htmlFor="picture-upload">
+                <Camera size={20} color="#d4c4a1" />
+            </PictureUploadLabel>
+            <PictureUploadInput
+                id="picture-upload"
+                type="file"
+                accept="image/*"
+                onChange={handlePictureChange}
             />
-            <InputIcon>
-              <Lock size={20} />
-            </InputIcon>
-          </InputGroup>
-          <InputGroup>
-            <Input
-              type="password"
-              placeholder="Confirm New Password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-            />
-            <InputIcon>
-              <Lock size={20} />
-            </InputIcon>
-          </InputGroup>
-          <Button type="submit">Update Profile</Button>
-        </Form>
-      </ProfileContainer>
-    </PageContainer>
+            </ProfilePictureContainer>
+            <Form onSubmit={handleSubmit}>
+            <InputGroup>
+                <Input
+                type="password"
+                placeholder="New Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                />
+                <InputIcon>
+                <Lock size={20} />
+                </InputIcon>
+            </InputGroup>
+            <InputGroup>
+                <Input
+                type="password"
+                placeholder="Confirm New Password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                />
+                <InputIcon>
+                <Lock size={20} />
+                </InputIcon>
+            </InputGroup>
+            <Button type="submit">Update Profile</Button>
+            </Form>
+        </ProfileContainer>
+        </PageContainer>
+    </>
+
   )
 }
 
