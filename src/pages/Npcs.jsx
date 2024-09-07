@@ -107,6 +107,15 @@ const PageContainer = styled.div`
   color: #b3a282;
   font-family: 'MedievalSharp', cursive;
   padding: 40px 20%;
+    @media (max-width: 1200px) {
+    padding: 40px 15%;
+  }
+  @media (max-width: 768px) {
+    padding: 40px 10%;
+  }
+  @media (max-width: 480px) {
+    padding: 40px 5%;
+  }
 `
 
 const Title = styled.h1`
