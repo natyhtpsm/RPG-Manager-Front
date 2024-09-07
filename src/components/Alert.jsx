@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import styled, { keyframes } from 'styled-components'
 
-// Remove the 'interface' keyword
 AlertProps = {
   message: string,
   duration: number,
