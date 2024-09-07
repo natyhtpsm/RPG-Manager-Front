@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Header } from '../components/Header.jsx';
@@ -8,26 +8,45 @@ import axios from 'axios';
 const apiUrl = import.meta.env.VITE_API_URL; 
 
 const Carousel = ({ items }) => {
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [transitionEnabled, setTransitionEnabled] = useState(true);
+  const clonedItems = [...items, ...items]; // Clonando os itens para permitir loop infinito
+  const trackRef = useRef(null);
+
+  const handleTransitionEnd = () => {
+    if (currentIndex === items.length || currentIndex === -1) {
+      setTransitionEnabled(false); // Desabilitamos a transição para mudar rapidamente
+      setCurrentIndex(currentIndex === items.length ? 0 : items.length - 1);
+    }
+  };
+
+  useEffect(() => {
+    if (!transitionEnabled) {
+      setTimeout(() => setTransitionEnabled(true), 50);
+    }
+  }, [transitionEnabled]);
 
   const nextSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === items.length - 1 ? 0 : prevIndex + 1
-    )
-  }
+    setCurrentIndex((prevIndex) => prevIndex + 1);
+  };
 
   const prevSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? items.length - 1 : prevIndex - 1
-    )
-  }
+    setCurrentIndex((prevIndex) => prevIndex - 1);
+  };
 
   return (
     <CarouselWrapper>
-      <CarouselTrack style={{ transform: `translateX(-${currentIndex * 270}px)` }}>
-        {items.map((region, index) => (
+      <CarouselTrack
+        ref={trackRef}
+        style={{
+          transform: `translateX(-${currentIndex * 270}px)`,
+          transition: transitionEnabled ? 'transform 0.3s ease' : 'none'
+        }}
+        onTransitionEnd={handleTransitionEnd}
+      >
+        {clonedItems.map((region, index) => (
           <CityCard key={index}>
-           <CityImage src={`data:image/${region.fileType};base64,${region.foto}`} alt={region.nome} />
+            <CityImage src={`data:image/${region.fileType};base64,${region.foto}`} alt={region.nome} />
             <CityName>{region.nome}</CityName>
           </CityCard>
         ))}
@@ -39,8 +58,8 @@ const Carousel = ({ items }) => {
         <ChevronRight size={24} />
       </NextButton>
     </CarouselWrapper>
-  )
-}
+  );
+};
 
 export default function LorePage() {
   const [regions, setRegions] = useState([]);
@@ -112,6 +131,15 @@ const PageContainer = styled.div`
   color: #b3a282;
   font-family: 'MedievalSharp', cursive;
   padding: 40px 20%;
+  @media (max-width: 1200px) {
+    padding: 40px 15%;
+  }
+  @media (max-width: 768px) {
+    padding: 40px 10%;
+  }
+  @media (max-width: 480px) {
+    padding: 40px 5%;
+  }
 `
 
 const Title = styled.h1`
