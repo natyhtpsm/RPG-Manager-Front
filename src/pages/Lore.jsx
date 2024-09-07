@@ -1,7 +1,110 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { Header } from '../components/Header'
+import { Header } from '../components/Header.jsx';
+import MapPic from '../assets/map.png'
+import axios from 'axios';
+
+const apiUrl = import.meta.env.VITE_API_URL; 
+
+const Carousel = ({ items }) => {
+  const [currentIndex, setCurrentIndex] = useState(0)
+
+  const nextSlide = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === items.length - 1 ? 0 : prevIndex + 1
+    )
+  }
+
+  const prevSlide = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? items.length - 1 : prevIndex - 1
+    )
+  }
+
+  return (
+    <CarouselWrapper>
+      <CarouselTrack style={{ transform: `translateX(-${currentIndex * 270}px)` }}>
+        {items.map((region, index) => (
+          <CityCard key={index}>
+           <CityImage src={`data:image/${region.fileType};base64,${region.foto}`} alt={region.nome} />
+            <CityName>{region.nome}</CityName>
+          </CityCard>
+        ))}
+      </CarouselTrack>
+      <PrevButton onClick={prevSlide} aria-label="Previous city">
+        <ChevronLeft size={24} />
+      </PrevButton>
+      <NextButton onClick={nextSlide} aria-label="Next city">
+        <ChevronRight size={24} />
+      </NextButton>
+    </CarouselWrapper>
+  )
+}
+
+export default function LorePage() {
+  const [regions, setRegions] = useState([]);
+
+  useEffect(() => {
+    const fetchRegions = async () => {
+      try {
+        const response = await axios.get(`${apiUrl}/regions`);
+        setRegions(response.data);
+      } catch (error) {
+        console.error('Erro ao buscar regiões:', error);
+      }
+    };
+
+    fetchRegions();
+  }, []);
+
+  return (
+    <>
+        <Header />
+        <PageContainer>
+        <Title>BG3 - Lore</Title>
+        <MapContainer>
+            <Map src={MapPic} alt="Map of bg3" />
+        </MapContainer>
+        
+        <CarouselContainer>
+            <CarouselTitle>Regions of Faerûn</CarouselTitle>
+            <Carousel items={regions} />
+        </CarouselContainer>
+        
+        <LoreSection>
+            <LoreTitle>The Chronicles of Faerûn</LoreTitle>
+            <LoreContent>
+            <p>
+              The land of Faerûn is in turmoil.
+            </p>
+            <p>
+
+            </p>
+              Refugees cross the wilds, fleeing the hell torn stronghold of Elturel. A vicious cult marches across the Sword Coast, uniting every race of monsters and men under the banner of a cryptic god they call the Absolute. Chaos strikes at Faerûn's foundations, and none may escape its talons.
+
+              Not even you.
+
+              The grotesque nautiloid ship appears out of nowhere, blotting out the sun. Its writhing tentacles snatch you from where you stand. The mind flayers have come, imprisoning you on their ship, infecting you with their horrid parasite. You will become one of them.
+
+            <p>
+
+              By fate or fortune, you survive when the nautiloid crashes in the Sword Coast outlands. You set out for civilization, desperate for a cure for the parasite festering in your brain, only to take center stage in a conspiracy that runs as deep as the Nine Hells.
+
+              New enemies await.
+
+            </p>
+            <p>
+              As for old foes... the shadows stir.
+              And all roads lead to the legendary city of Baldur's Gate.
+            </p>
+            </LoreContent>
+        </LoreSection>
+        </PageContainer>
+    </>
+
+  )
+}
 
 const PageContainer = styled.div`
   background-color: #0f0d0a;
@@ -140,117 +243,3 @@ const LoreContent = styled.div`
     margin-bottom: 15px;
   }
 `
-
-const cities = [
-  {
-    name: 'Eldoria',
-    image: '/placeholder.svg?height=150&width=250',
-    description: 'The shining capital of the realm, known for its towering spires and magical academies.'
-  },
-  {
-    name: 'Shadowhaven',
-    image: '/placeholder.svg?height=150&width=250',
-    description: 'A mysterious port city shrouded in mist, home to skilled rogues and merchants.'
-  },
-  {
-    name: 'Ironhold',
-    image: '/placeholder.svg?height=150&width=250',
-    description: 'A dwarven stronghold carved into the mountains, famed for its master craftsmen.'
-  },
-  {
-    name: 'Sylvandale',
-    image: '/placeholder.svg?height=150&width=250',
-    description: 'An elven city nestled in the heart of the ancient forest, in harmony with nature.'
-  },
-  {
-    name: 'Stormhaven',
-    image: '/placeholder.svg?height=150&width=250',
-    description: 'A coastal fortress city, home to the realm\'s navy and weather mages.'
-  }
-]
-
-const Carousel = ({ items }) => {
-  const [currentIndex, setCurrentIndex] = useState(0)
-
-  const nextSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === items.length - 1 ? 0 : prevIndex + 1
-    )
-  }
-
-  const prevSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? items.length - 1 : prevIndex - 1
-    )
-  }
-
-  return (
-    <CarouselWrapper>
-      <CarouselTrack style={{ transform: `translateX(-${currentIndex * 270}px)` }}>
-        {items.map((city, index) => (
-          <CityCard key={index}>
-            <CityImage src={city.image} alt={city.name} />
-            <CityName>{city.name}</CityName>
-            <CityDescription>{city.description}</CityDescription>
-          </CityCard>
-        ))}
-      </CarouselTrack>
-      <PrevButton onClick={prevSlide} aria-label="Previous city">
-        <ChevronLeft size={24} />
-      </PrevButton>
-      <NextButton onClick={nextSlide} aria-label="Next city">
-        <ChevronRight size={24} />
-      </NextButton>
-    </CarouselWrapper>
-  )
-}
-
-export default function LorePage() {
-  return (
-    <>
-        <Header />
-        <PageContainer>
-        <Title>Realm of Mythoria: Lore and Legends</Title>
-        
-        <MapContainer>
-            <Map src="/placeholder.svg?height=400&width=800" alt="Map of Mythoria" />
-        </MapContainer>
-        
-        <CarouselContainer>
-            <CarouselTitle>Cities of Mythoria</CarouselTitle>
-            <Carousel items={cities} />
-        </CarouselContainer>
-        
-        <LoreSection>
-            <LoreTitle>The Chronicles of Mythoria</LoreTitle>
-            <LoreContent>
-            <p>
-                In the realm of Mythoria, where magic flows like rivers and ancient prophecies shape the fate of nations, 
-                a delicate balance has long existed between the forces of light and shadow. For millennia, the five great 
-                cities have stood as bastions of civilization, each with its own unique character and role in the grand 
-                tapestry of the realm.
-            </p>
-            <p>
-                Eldoria, the shining jewel of Mythoria, has long been the seat of power for the High Council of Mages. 
-                Its gleaming spires reach towards the heavens, housing countless libraries of arcane knowledge and 
-                academies where aspiring spellcasters hone their craft. The city pulses with magical energy, and it is 
-                said that even the streets themselves are imbued with enchantments of protection and prosperity.
-            </p>
-            <p>
-                To the west, shrouded in perpetual mist, lies the enigmatic port city of Shadowhaven. Here, in narrow 
-                alleys and hidden coves, the Guild of Shadows conducts its clandestine affairs. The city is a haven for 
-                those seeking to disappear or to uncover secrets, and its markets are renowned for rare and often 
-                dangerous artifacts from across the realm and beyond.
-            </p>
-            <p>
-                But now, as an ancient evil stirs in the depths of the Abyssal Chasm, the realm faces its greatest 
-                challenge in a thousand years. Heroes must rise, alliances must be forged, and the true mettle of 
-                Mythoria will be tested in the crucible of destiny.
-            </p>
-            </LoreContent>
-        </LoreSection>
-        </PageContainer>
-    </>
-
-  )
-}
