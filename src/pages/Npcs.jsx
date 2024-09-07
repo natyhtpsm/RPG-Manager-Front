@@ -1,7 +1,10 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Header } from '../components/Header';
+import axios from 'axios';
+
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const Carousel = ({ title, items }) => {
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -25,9 +28,9 @@ const Carousel = ({ title, items }) => {
         <CarouselTrack style={{ transform: `translateX(-${currentIndex * 220}px)` }}>
           {items.map((item, index) => (
             <Card key={index}>
-              <CardImage src={item.image} alt={item.name} />
-              <CardTitle>{item.name}</CardTitle>
-              <CardSubtitle>{item.class}</CardSubtitle>
+              <CardImage src={`data:image/jpeg;base64,${item.foto}`} alt={item.nome} />
+              <CardTitle>{item.npc_nome || item.inimigo_nome}</CardTitle>
+              <CardSubtitle>{item.tipo || 'Inimigo'}</CardSubtitle>
             </Card>
           ))}
         </CarouselTrack>
@@ -39,29 +42,53 @@ const Carousel = ({ title, items }) => {
         </NextButton>
       </CarouselWrapper>
     </CarouselContainer>
-  )
+  );
 }
 
 export default function NPCPage() {
+  const [npcs, setNpcs] = useState([]);
+  const [enemies, setEnemies] = useState([]);
+  useEffect(() => {
+    const fetchNPCs = async () => {
+      try {
+        const response = await axios.get(`${apiUrl}/npcs`);
+        setNpcs(response.data);
+      } catch (error) {
+        console.error('Erro ao buscar NPCs:', error);
+      }
+    };
+
+    const fetchEnemies = async () => {
+      try {
+        const response = await axios.get(`${apiUrl}/inimigos`);
+        setEnemies(response.data);
+      } catch (error) {
+        console.error('Erro ao buscar inimigos:', error);
+      }
+    };
+
+    fetchNPCs();
+    fetchEnemies();
+  }, []);
+
   return (
     <>
-        <Header />
-        <PageContainer>
+      <Header />
+      <PageContainer>
         <Title>NPCs and Enemies</Title>
-        <Carousel title="Characters" items={characters} />
+        <Carousel title="Characters" items={npcs} />
         <Carousel title="Enemies" items={enemies} />
-        </PageContainer>
+      </PageContainer>
     </>
   );
-};
-
+}
 
 const PageContainer = styled.div`
   background-color: #0f0d0a;
   min-height: 100vh;
   color: #b3a282;
   font-family: 'MedievalSharp', cursive;
-  padding: 40px 20px;
+  padding: 40px 20%;
 `
 
 const Title = styled.h1`
