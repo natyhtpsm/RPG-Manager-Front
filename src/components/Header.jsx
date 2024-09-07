@@ -54,10 +54,10 @@ export const Header = () => {
           <DropdownMenu isOpen={isDropdownOpen}>
             {user ? ( 
               <>
-                <DropdownItem>Profile</DropdownItem>
-                <DropdownItem>Characters</DropdownItem>
-                <DropdownItem>Inventory</DropdownItem>
-                <DropdownItem>Quests</DropdownItem>
+                <DropdownItem href="/profile">Profile</DropdownItem>
+                <DropdownItem href="/characters">Characters</DropdownItem>
+                <DropdownItem href="/inventory">Inventory</DropdownItem>
+                <DropdownItem href="/quests">Quests</DropdownItem>
                 <DropdownItem onClick={handleLogout}>
                   <LogOut size={16} />
                   Logout
