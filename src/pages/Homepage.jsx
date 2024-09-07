@@ -1,25 +1,27 @@
-import React from 'react'
-import styled from 'styled-components'
-import { Header } from '../components/Header.jsx'
+import React from 'react';
+import styled from 'styled-components';
+import { Header } from '../components/Header.jsx';
 
 export default function RPGManager() {
   return (
-    <PageContainer>
+    <>
       <Header />
-      <Content>
-        <Title>Welcome to Your RPG Adventure</Title>
-        <Section>
-          <SectionTitle>Character Overview</SectionTitle>
-          <p>Here you can view and manage your character's details, inventory, and progress.</p>
-        </Section>
-        <Section>
-          <SectionTitle>Recent Activities</SectionTitle>
-          <p>Your latest quests, battles, and achievements will be displayed here.</p>
-        </Section>
-      </Content>
-    </PageContainer>
-  )
-}
+      <PageContainer>
+          <Content>
+            <Title>Welcome to Your RPG Adventure</Title>
+            <Section>
+              <SectionTitle>Character Overview</SectionTitle>
+              <p>Here you can view and manage your character's details, inventory, and progress.</p>
+            </Section>
+            <Section>
+              <SectionTitle>Recent Activities</SectionTitle>
+              <p>Your latest quests, battles, and achievements will be displayed here.</p>
+            </Section>
+          </Content>
+      </PageContainer>
+    </>
+  );
+};
 
 const PageContainer = styled.div`
   background-color: #0f0d0a;
