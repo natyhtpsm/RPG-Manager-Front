@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { Header } from '../components/Header'
 
 const PageContainer = styled.div`
   background-color: #0f0d0a;
@@ -206,46 +207,50 @@ const Carousel = ({ items }) => {
 
 export default function LorePage() {
   return (
-    <PageContainer>
-      <Title>Realm of Mythoria: Lore and Legends</Title>
-      
-      <MapContainer>
-        <Map src="/placeholder.svg?height=400&width=800" alt="Map of Mythoria" />
-      </MapContainer>
-      
-      <CarouselContainer>
-        <CarouselTitle>Cities of Mythoria</CarouselTitle>
-        <Carousel items={cities} />
-      </CarouselContainer>
-      
-      <LoreSection>
-        <LoreTitle>The Chronicles of Mythoria</LoreTitle>
-        <LoreContent>
-          <p>
-            In the realm of Mythoria, where magic flows like rivers and ancient prophecies shape the fate of nations, 
-            a delicate balance has long existed between the forces of light and shadow. For millennia, the five great 
-            cities have stood as bastions of civilization, each with its own unique character and role in the grand 
-            tapestry of the realm.
-          </p>
-          <p>
-            Eldoria, the shining jewel of Mythoria, has long been the seat of power for the High Council of Mages. 
-            Its gleaming spires reach towards the heavens, housing countless libraries of arcane knowledge and 
-            academies where aspiring spellcasters hone their craft. The city pulses with magical energy, and it is 
-            said that even the streets themselves are imbued with enchantments of protection and prosperity.
-          </p>
-          <p>
-            To the west, shrouded in perpetual mist, lies the enigmatic port city of Shadowhaven. Here, in narrow 
-            alleys and hidden coves, the Guild of Shadows conducts its clandestine affairs. The city is a haven for 
-            those seeking to disappear or to uncover secrets, and its markets are renowned for rare and often 
-            dangerous artifacts from across the realm and beyond.
-          </p>
-          <p>
-            But now, as an ancient evil stirs in the depths of the Abyssal Chasm, the realm faces its greatest 
-            challenge in a thousand years. Heroes must rise, alliances must be forged, and the true mettle of 
-            Mythoria will be tested in the crucible of destiny.
-          </p>
-        </LoreContent>
-      </LoreSection>
-    </PageContainer>
+    <>
+        <Header />
+        <PageContainer>
+        <Title>Realm of Mythoria: Lore and Legends</Title>
+        
+        <MapContainer>
+            <Map src="/placeholder.svg?height=400&width=800" alt="Map of Mythoria" />
+        </MapContainer>
+        
+        <CarouselContainer>
+            <CarouselTitle>Cities of Mythoria</CarouselTitle>
+            <Carousel items={cities} />
+        </CarouselContainer>
+        
+        <LoreSection>
+            <LoreTitle>The Chronicles of Mythoria</LoreTitle>
+            <LoreContent>
+            <p>
+                In the realm of Mythoria, where magic flows like rivers and ancient prophecies shape the fate of nations, 
+                a delicate balance has long existed between the forces of light and shadow. For millennia, the five great 
+                cities have stood as bastions of civilization, each with its own unique character and role in the grand 
+                tapestry of the realm.
+            </p>
+            <p>
+                Eldoria, the shining jewel of Mythoria, has long been the seat of power for the High Council of Mages. 
+                Its gleaming spires reach towards the heavens, housing countless libraries of arcane knowledge and 
+                academies where aspiring spellcasters hone their craft. The city pulses with magical energy, and it is 
+                said that even the streets themselves are imbued with enchantments of protection and prosperity.
+            </p>
+            <p>
+                To the west, shrouded in perpetual mist, lies the enigmatic port city of Shadowhaven. Here, in narrow 
+                alleys and hidden coves, the Guild of Shadows conducts its clandestine affairs. The city is a haven for 
+                those seeking to disappear or to uncover secrets, and its markets are renowned for rare and often 
+                dangerous artifacts from across the realm and beyond.
+            </p>
+            <p>
+                But now, as an ancient evil stirs in the depths of the Abyssal Chasm, the realm faces its greatest 
+                challenge in a thousand years. Heroes must rise, alliances must be forged, and the true mettle of 
+                Mythoria will be tested in the crucible of destiny.
+            </p>
+            </LoreContent>
+        </LoreSection>
+        </PageContainer>
+    </>
+
   )
 }

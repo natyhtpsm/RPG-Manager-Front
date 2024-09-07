@@ -3,6 +3,59 @@ import styled from 'styled-components'
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Header } from '../components/Header';
 
+const Carousel = ({ title, items }) => {
+  const [currentIndex, setCurrentIndex] = useState(0)
+
+  const nextSlide = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === items.length - 1 ? 0 : prevIndex + 1
+    )
+  }
+
+  const prevSlide = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? items.length - 1 : prevIndex - 1
+    )
+  }
+
+  return (
+    <CarouselContainer>
+      <CarouselTitle>{title}</CarouselTitle>
+      <CarouselWrapper>
+        <CarouselTrack style={{ transform: `translateX(-${currentIndex * 220}px)` }}>
+          {items.map((item, index) => (
+            <Card key={index}>
+              <CardImage src={item.image} alt={item.name} />
+              <CardTitle>{item.name}</CardTitle>
+              <CardSubtitle>{item.class}</CardSubtitle>
+            </Card>
+          ))}
+        </CarouselTrack>
+        <PrevButton onClick={prevSlide} aria-label="Previous">
+          <ChevronLeft size={24} />
+        </PrevButton>
+        <NextButton onClick={nextSlide} aria-label="Next">
+          <ChevronRight size={24} />
+        </NextButton>
+      </CarouselWrapper>
+    </CarouselContainer>
+  )
+}
+
+export default function NPCPage() {
+  return (
+    <>
+        <Header />
+        <PageContainer>
+        <Title>NPCs and Enemies</Title>
+        <Carousel title="Characters" items={characters} />
+        <Carousel title="Enemies" items={enemies} />
+        </PageContainer>
+    </>
+  );
+};
+
+
 const PageContainer = styled.div`
   background-color: #0f0d0a;
   min-height: 100vh;
@@ -100,71 +153,3 @@ const PrevButton = styled(CarouselButton)`
 const NextButton = styled(CarouselButton)`
   right: 10px;
 `
-
-const Carousel = ({ title, items }) => {
-  const [currentIndex, setCurrentIndex] = useState(0)
-
-  const nextSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === items.length - 1 ? 0 : prevIndex + 1
-    )
-  }
-
-  const prevSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? items.length - 1 : prevIndex - 1
-    )
-  }
-
-  return (
-    <CarouselContainer>
-      <CarouselTitle>{title}</CarouselTitle>
-      <CarouselWrapper>
-        <CarouselTrack style={{ transform: `translateX(-${currentIndex * 220}px)` }}>
-          {items.map((item, index) => (
-            <Card key={index}>
-              <CardImage src={item.image} alt={item.name} />
-              <CardTitle>{item.name}</CardTitle>
-              <CardSubtitle>{item.class}</CardSubtitle>
-            </Card>
-          ))}
-        </CarouselTrack>
-        <PrevButton onClick={prevSlide} aria-label="Previous">
-          <ChevronLeft size={24} />
-        </PrevButton>
-        <NextButton onClick={nextSlide} aria-label="Next">
-          <ChevronRight size={24} />
-        </NextButton>
-      </CarouselWrapper>
-    </CarouselContainer>
-  )
-}
-
-const characters = [
-  { name: 'Eldrin', class: 'Wizard', image: '/placeholder.svg?height=200&width=200' },
-  { name: 'Thorne', class: 'Warrior', image: '/placeholder.svg?height=200&width=200' },
-  { name: 'Lyra', class: 'Rogue', image: '/placeholder.svg?height=200&width=200' },
-  { name: 'Brynn', class: 'Cleric', image: '/placeholder.svg?height=200&width=200' },
-  { name: 'Fenris', class: 'Ranger', image: '/placeholder.svg?height=200&width=200' },
-]
-
-const enemies = [
-  { name: 'Drakoth', class: 'Dragon', image: '/placeholder.svg?height=200&width=200' },
-  { name: 'Morgath', class: 'Necromancer', image: '/placeholder.svg?height=200&width=200' },
-  { name: 'Grimbold', class: 'Orc Warlord', image: '/placeholder.svg?height=200&width=200' },
-  { name: 'Sylvanna', class: 'Dark Elf', image: '/placeholder.svg?height=200&width=200' },
-  { name: 'Kragmar', class: 'Stone Giant', image: '/placeholder.svg?height=200&width=200' },
-]
-
-export default function NPCPage() {
-  return (
-    <>
-        <Header />
-        <PageContainer>
-        <Title>NPCs and Enemies</Title>
-        <Carousel title="Characters" items={characters} />
-        <Carousel title="Enemies" items={enemies} />
-        </PageContainer>
-    </>
-  );
-};
