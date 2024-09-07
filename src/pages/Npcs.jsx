@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Header } from '../components/Header';
@@ -7,26 +7,44 @@ import axios from 'axios';
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const Carousel = ({ title, items }) => {
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [transitionEnabled, setTransitionEnabled] = useState(true);
+  const clonedItems = [...items, ...items]; 
+  const trackRef = useRef(null);
+  const handleTransitionEnd = () => {
+    if (currentIndex === items.length || currentIndex === -1) {
+      setTransitionEnabled(false); 
+      setCurrentIndex(currentIndex === items.length ? 0 : items.length - 1);
+    }
+  };
+
+  useEffect(() => {
+    if (!transitionEnabled) {
+      setTimeout(() => setTransitionEnabled(true), 50);
+    }
+  }, [transitionEnabled]);
 
   const nextSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === items.length - 1 ? 0 : prevIndex + 1
-    )
-  }
+    setCurrentIndex((prevIndex) => prevIndex + 1);
+  };
 
   const prevSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? items.length - 1 : prevIndex - 1
-    )
-  }
+    setCurrentIndex((prevIndex) => prevIndex - 1);
+  };
 
   return (
     <CarouselContainer>
       <CarouselTitle>{title}</CarouselTitle>
       <CarouselWrapper>
-        <CarouselTrack style={{ transform: `translateX(-${currentIndex * 220}px)` }}>
-          {items.map((item, index) => (
+        <CarouselTrack
+          ref={trackRef}
+          style={{
+            transform: `translateX(-${currentIndex * 220}px)`,
+            transition: transitionEnabled ? 'transform 0.3s ease' : 'none'
+          }}
+          onTransitionEnd={handleTransitionEnd}
+        >
+          {clonedItems.map((item, index) => (
             <Card key={index}>
               <CardImage src={`data:image/jpeg;base64,${item.foto}`} alt={item.nome} />
               <CardTitle>{item.npc_nome || item.inimigo_nome}</CardTitle>
@@ -43,7 +61,7 @@ const Carousel = ({ title, items }) => {
       </CarouselWrapper>
     </CarouselContainer>
   );
-}
+};
 
 export default function NPCPage() {
   const [npcs, setNpcs] = useState([]);
