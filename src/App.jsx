@@ -7,6 +7,7 @@ import SignUpPage from './pages/SignUp.jsx';
 import NPCPage from './pages/Npcs.jsx';
 import LorePage from './pages/Lore.jsx';
 import ClassesPage from './pages/Classes.jsx';
+import PlayerProfilePage from './pages/Profile.jsx';
 
 function App() {
   const [user, setUser] = useState(0);
@@ -22,6 +23,7 @@ function App() {
             <Route path="/npcs" element={<NPCPage />} />
             <Route path="/lore" element={<LorePage />} />
             <Route path="/classes" element={<ClassesPage />} />
+            <Route path="/profile" element={<PlayerProfilePage />} />
           </Routes>
         </BrowserRouter>
       </AuthContext.Provider>
