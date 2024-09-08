@@ -1,81 +1,75 @@
-import React from 'react'
-import styled from 'styled-components'
-import { Scroll, Target, Award, User } from 'lucide-react'
-import { Header } from '../components/Header'
+import React, { useState, useEffect, useContext } from 'react';
+import styled from 'styled-components';
+import { Scroll, Target, Award, User } from 'lucide-react';
+import { Header } from '../components/Header';
+import axios from 'axios';
+import AuthContext from '../functions/context.jsx';
 
-const missions = [
-  {
-    id: 1,
-    name: "The Lost Artifact",
-    goal: "Retrieve the ancient amulet",
-    description: "Deep in the Whispering Woods lies an ancient amulet of immense power. Brave the forest's dangers and return the artifact to the Elders.",
-    reward: "500 gold coins",
-    character: "Eldrin"
-  },
-  {
-    id: 2,
-    name: "Dragon's Lair",
-    goal: "Slay the dragon terrorizing the village",
-    description: "A fearsome dragon has made its lair in the nearby mountains, threatening the peaceful village of Oakvale. End this menace and bring peace to the realm.",
-    reward: "1000 gold coins and a magical sword",
-    character: "Thorne"
-  },
-  {
-    id: 3,
-    name: "The Cursed Crypt",
-    goal: "Break the curse and free the trapped souls",
-    description: "An ancient crypt has been sealed for centuries, trapping restless souls within. Enter the crypt, solve its puzzles, and break the curse to free the spirits.",
-    reward: "750 gold coins and a spellbook",
-    character: "Lyra"
-  },
-  {
-    id: 4,
-    name: "Diplomatic Mission",
-    goal: "Negotiate peace between warring factions",
-    description: "Two powerful factions are on the brink of war. Travel to their capitals, understand their grievances, and broker a peace treaty to prevent bloodshed.",
-    reward: "600 gold coins and increased reputation",
-    character: "Brynn"
-  }
-]
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export default function MissionsPage() {
+  const [missions, setMissions] = useState([]);
+  const { user } = useContext(AuthContext);
+
+  useEffect(() => {
+    const fetchMissions = async () => {
+      try {
+        const storedUser = localStorage.getItem('user');
+        const token = storedUser ? JSON.parse(storedUser).token : null;
+
+        if (!token) return;
+
+        const response = await axios.get(`${apiUrl}/questsandrewards`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        setMissions(response.data); // Preenche o estado com as missões do backend
+      } catch (error) {
+        console.error('Erro ao buscar missões:', error);
+      }
+    };
+
+    fetchMissions();
+  }, []);
+
   return (
     <>
-        <Header />
-        <PageContainer>
+      <Header />
+      <PageContainer>
         <Title>Active Missions</Title>
-            <MissionsGrid>
-                {missions.map((mission) => (
-                <MissionCard key={mission.id}>
-                    <MissionName>{mission.name}</MissionName>
-                    <MissionInfo>
-                    <IconWrapper>
-                        <Target size={16} />
-                    </IconWrapper>
-                    {mission.goal}
-                    </MissionInfo>
-                    <MissionInfo>
-                    <IconWrapper>
-                        <User size={16} />
-                    </IconWrapper>
-                    {mission.character}
-                    </MissionInfo>
-                    <MissionDescription>{mission.description}</MissionDescription>
-                    <MissionReward>
-                    <IconWrapper>
-                        <Award size={16} />
-                    </IconWrapper>
-                    {mission.reward}
-                    </MissionReward>
-                </MissionCard>
-                ))}
-            </MissionsGrid>
-        </PageContainer>        
+        <MissionsGrid>
+          {missions.length > 0 ? (
+            missions.map((mission, index) => (
+              <MissionCard key={index}>
+                <MissionName>{mission.missao}</MissionName>
+                <MissionInfo>
+                  <IconWrapper>
+                    <Target size={16} />
+                  </IconWrapper>
+                  {mission.objetivo}
+                </MissionInfo>
+                <MissionInfo>
+                  <IconWrapper>
+                    <User size={16} />
+                  </IconWrapper>
+                  {mission.personagem}
+                </MissionInfo>
+                <MissionReward>
+                  <IconWrapper>
+                    <Award size={16} />
+                  </IconWrapper>
+                  {mission.item} (Quantidade: {mission.quantidade})
+                </MissionReward>
+              </MissionCard>
+            ))
+          ) : (
+            <p>Nenhuma missão ativa.</p>
+          )}
+        </MissionsGrid>
+      </PageContainer>
     </>
-
   );
-};
-
+}
 
 const PageContainer = styled.div`
   background-color: #0f0d0a;
@@ -83,14 +77,14 @@ const PageContainer = styled.div`
   color: #b3a282;
   font-family: 'MedievalSharp', cursive;
   padding: 40px 20px;
-`
+`;
 
 const Title = styled.h1`
   color: #d4c4a1;
   font-size: 36px;
   text-align: center;
   margin-bottom: 30px;
-`
+`;
 
 const MissionsGrid = styled.div`
   display: grid;
@@ -98,7 +92,7 @@ const MissionsGrid = styled.div`
   gap: 20px;
   max-width: 1200px;
   margin: 0 auto;
-`
+`;
 
 const MissionCard = styled.div`
   background: rgba(44, 36, 22, 0.8);
@@ -112,33 +106,26 @@ const MissionCard = styled.div`
   &:hover {
     transform: translateY(-5px);
   }
-`
+`;
 
 const MissionName = styled.h2`
   color: #d4c4a1;
   font-size: 24px;
   margin-bottom: 10px;
-`
+`;
 
 const MissionInfo = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 10px;
   color: #b3a282;
-`
+`;
 
 const IconWrapper = styled.span`
   margin-right: 10px;
   display: flex;
   align-items: center;
-`
-
-const MissionDescription = styled.p`
-  color: #b3a282;
-  font-size: 16px;
-  margin-bottom: 15px;
-  flex-grow: 1;
-`
+`;
 
 const MissionReward = styled.div`
   background: rgba(61, 52, 37, 0.6);
@@ -149,4 +136,4 @@ const MissionReward = styled.div`
   justify-content: center;
   font-weight: bold;
   color: #ffd700;
-`
+`;
