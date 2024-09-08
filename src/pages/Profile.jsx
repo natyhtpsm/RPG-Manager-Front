@@ -44,7 +44,7 @@ export default function PlayerProfilePage() {
     <>
       <Header />
       <PageContainer>
-        <Title>Player Profile</Title>
+        <Title>Profile</Title>
         <ProfileContainer>
           <ProfilePictureContainer>
             <ProfilePicture src={profilePicture} alt="Player Avatar" />
@@ -84,7 +84,7 @@ export default function PlayerProfilePage() {
                 <Lock size={20} />
               </InputIcon>
             </InputGroup>
-            <Button type="submit">Update Profile</Button>
+            <Button type="submit">Update</Button>
           </Form>
         </ProfileContainer>
       </PageContainer>
