@@ -1,81 +1,96 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
 import { User, Lock, Camera } from 'lucide-react';
-import { Header } from '../components/Header.jsx'
+import { Header } from '../components/Header.jsx';
+import AuthContext from '../functions/context.jsx';
 
 export default function PlayerProfilePage() {
-  const [profilePicture, setProfilePicture] = useState('/placeholder.svg?height=150&width=150')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
+  const [profilePicture, setProfilePicture] = useState('/placeholder.svg?height=150&width=150');
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const { user, setUser } = useContext(AuthContext);
+
+  // Pegar o usuário do localStorage e definir a foto e nome
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
+      setName(parsedUser.nome);
+      if (parsedUser.foto) {
+        setProfilePicture(`data:image/jpeg;base64,${parsedUser.foto}`); // Supondo que a foto esteja em base64
+      }
+    }
+  }, [setUser]);
 
   const handlePictureChange = (e) => {
-    const file = e.target.files[0]
+    const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader()
+      const reader = new FileReader();
       reader.onloadend = () => {
-        setProfilePicture(reader.result)
-      }
-      reader.readAsDataURL(file)
+        setProfilePicture(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
-  }
+  };
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log('Password change submitted')
-  }
+    e.preventDefault();
+    console.log('Password change submitted');
+  };
 
   return (
     <>
-        <Header />
-        <PageContainer>
+      <Header />
+      <PageContainer>
         <Title>Player Profile</Title>
         <ProfileContainer>
-            <ProfilePictureContainer>
+          <ProfilePictureContainer>
             <ProfilePicture src={profilePicture} alt="Player Avatar" />
             <PictureUploadLabel htmlFor="picture-upload">
-                <Camera size={20} color="#d4c4a1" />
+              <Camera size={20} color="#d4c4a1" />
             </PictureUploadLabel>
             <PictureUploadInput
-                id="picture-upload"
-                type="file"
-                accept="image/*"
-                onChange={handlePictureChange}
+              id="picture-upload"
+              type="file"
+              accept="image/*"
+              onChange={handlePictureChange}
             />
-            </ProfilePictureContainer>
-            <Form onSubmit={handleSubmit}>
+          </ProfilePictureContainer>
+          <PlayerName>{name}</PlayerName>
+          <Form onSubmit={handleSubmit}>
             <InputGroup>
-                <Input
+              <Input
                 type="password"
                 placeholder="New Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                />
-                <InputIcon>
+              />
+              <InputIcon>
                 <Lock size={20} />
-                </InputIcon>
+              </InputIcon>
             </InputGroup>
             <InputGroup>
-                <Input
+              <Input
                 type="password"
                 placeholder="Confirm New Password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
-                />
-                <InputIcon>
+              />
+              <InputIcon>
                 <Lock size={20} />
-                </InputIcon>
+              </InputIcon>
             </InputGroup>
             <Button type="submit">Update Profile</Button>
-            </Form>
+          </Form>
         </ProfileContainer>
-        </PageContainer>
+      </PageContainer>
     </>
-
-  )
+  );
 }
-
 
 const PageContainer = styled.div`
   background-color: #0f0d0a;
@@ -83,14 +98,14 @@ const PageContainer = styled.div`
   color: #b3a282;
   font-family: 'MedievalSharp', cursive;
   padding: 40px 20px;
-`
+`;
 
 const Title = styled.h1`
   color: #d4c4a1;
   font-size: 36px;
   text-align: center;
   margin-bottom: 30px;
-`
+`;
 
 const ProfileContainer = styled.div`
   max-width: 600px;
@@ -99,14 +114,14 @@ const ProfileContainer = styled.div`
   border: 2px solid #3d3425;
   border-radius: 8px;
   padding: 30px;
-`
+`;
 
 const ProfilePictureContainer = styled.div`
   position: relative;
   width: 150px;
   height: 150px;
   margin: 0 auto 20px;
-`
+`;
 
 const ProfilePicture = styled.img`
   width: 100%;
@@ -114,7 +129,7 @@ const ProfilePicture = styled.img`
   object-fit: cover;
   border-radius: 50%;
   border: 3px solid #6d5d3f;
-`
+`;
 
 const PictureUploadLabel = styled.label`
   position: absolute;
@@ -133,21 +148,28 @@ const PictureUploadLabel = styled.label`
   &:hover {
     background-color: #8a7b5c;
   }
-`
+`;
 
 const PictureUploadInput = styled.input`
   display: none;
-`
+`;
+
+const PlayerName = styled.h2`
+  color: #d4c4a1;
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 20px;
+`;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 20px;
-`
+`;
 
 const InputGroup = styled.div`
   position: relative;
-`
+`;
 
 const Input = styled.input`
   width: 100%;
@@ -167,7 +189,7 @@ const Input = styled.input`
   &::placeholder {
     color: #8a7b5c;
   }
-`
+`;
 
 const InputIcon = styled.span`
   position: absolute;
@@ -175,7 +197,7 @@ const InputIcon = styled.span`
   top: 50%;
   transform: translateY(-50%);
   color: #8a7b5c;
-`
+`;
 
 const Button = styled.button`
   background: linear-gradient(to bottom, #6d5d3f 0%, #4a3f2b 100%);
@@ -195,4 +217,4 @@ const Button = styled.button`
     outline: 2px solid #b3a282;
     outline-offset: 2px;
   }
-`
+`;
