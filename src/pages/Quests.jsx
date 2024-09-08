@@ -58,7 +58,7 @@ export default function MissionsPage() {
                   <IconWrapper>
                     <Award size={16} />
                   </IconWrapper>
-                  {mission.item} (Quantidade: {mission.quantidade})
+                  {mission.item} (Quantity: {mission.quantidade})
                 </MissionReward>
               </MissionCard>
             ))
