@@ -110,7 +110,9 @@ export default function CharacterInventoryPage() {
             </InventoryGrid>
           </>
         ) : (
-          <EmptyInventory>You did not create any character</EmptyInventory>
+          <>
+            <EmptyInventory>You did not create any character</EmptyInventory>
+          </>
         )}
       </PageContainer>
     </>
