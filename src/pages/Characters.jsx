@@ -57,7 +57,7 @@ export default function PlayerCharactersPage() {
     <>
       <Header />
       <PageContainer>
-        <Title>Seus Personagens</Title>
+        <Title>Your characters</Title>
         {errorMessage ? (
           <Title>{errorMessage}</Title>
         ) : (
