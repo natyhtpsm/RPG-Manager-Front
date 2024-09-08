@@ -101,7 +101,7 @@ export default function CharacterInventoryPage() {
                 inventoryItems.map((item, index) => (
                   <ItemCard key={index}>
                     <ItemName>{item.item}</ItemName>
-                    <ItemDescription>Quantidade: {item.quantidade}</ItemDescription>
+                    <ItemDescription>Quantity: {item.quantidade}</ItemDescription>
                   </ItemCard>
                 ))
               ) : (
@@ -190,6 +190,8 @@ const InventoryGrid = styled.div`
   gap: 20px;
   max-width: 1200px;
   margin: 0 auto;
+  justify-content: center;
+  align-items: center;
 `;
 
 const ItemCard = styled.div`
