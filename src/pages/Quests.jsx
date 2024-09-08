@@ -23,7 +23,7 @@ export default function MissionsPage() {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        setMissions(response.data); // Preenche o estado com as missões do backend
+        setMissions(response.data);
       } catch (error) {
         console.error('Erro ao buscar missões:', error);
       }
