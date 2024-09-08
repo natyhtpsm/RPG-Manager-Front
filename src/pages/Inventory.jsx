@@ -10,7 +10,7 @@ const apiUrl = import.meta.env.VITE_API_URL;
 export default function CharacterInventoryPage() {
   const [characters, setCharacters] = useState([]);
   const [selectedCharacter, setSelectedCharacter] = useState(null);
-  const [allInventoryItems, setAllInventoryItems] = useState([]); // Armazena todos os itens
+  const [allInventoryItems, setAllInventoryItems] = useState([]); 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { user } = useContext(AuthContext);
 
