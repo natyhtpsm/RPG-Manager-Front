@@ -11,10 +11,10 @@ const apiUrl = import.meta.env.VITE_API_URL;
 export default function PlayerProfilePage() {
   const [profilePicture, setProfilePicture] = useState('/placeholder.svg?height=150&width=150');
   const [name, setName] = useState('');
-  const [currentPassword, setCurrentPassword] = useState(''); // Senha atual
-  const [newPassword, setNewPassword] = useState(''); // Nova senha
-  const [confirmPassword, setConfirmPassword] = useState(''); // Confirmação de nova senha
-  const [alert, setAlert] = useState(null);
+  const [currentPassword, setCurrentPassword] = useState('');  // Adiciona o campo para senha atual
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [alert, setAlert] = useState(null); 
   const { user, setUser } = useContext(AuthContext);
 
   useEffect(() => {
@@ -42,38 +42,44 @@ export default function PlayerProfilePage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (newPassword !== confirmPassword) {
+  
+    if (newPassword !== confirmNewPassword) {
       setAlert({ message: 'Passwords do not match!', type: 'error', duration: 3000 });
       return;
     }
-
+  
     try {
       const storedUser = localStorage.getItem('user');
       const token = storedUser ? JSON.parse(storedUser).token : null;
-
+  
       if (!token) {
         setAlert({ message: 'User not authenticated', type: 'error', duration: 3000 });
         return;
       }
-
-      // Requisição para mudar a senha
-      await axios.put(`${apiUrl}/changepassword`, {
-        currentPassword, 
-        newPassword
+  
+      // Requisição para mudar senha
+      const response = await axios.put(`${apiUrl}/changepassword`, {
+        currentPassword,  // Enviando senha atual
+        newPassword,      // Enviando nova senha
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
-
+  
       setAlert({ message: 'Password updated successfully!', type: 'success', duration: 3000 });
-      setCurrentPassword('');
-      setNewPassword('');
-      setConfirmPassword('');
+      setCurrentPassword('');  // Limpa campo de senha atual
+      setNewPassword('');      // Limpa campo de nova senha
+      setConfirmNewPassword('');  // Limpa campo de confirmação
+  
     } catch (error) {
-      setAlert({ message: 'Error updating password', type: 'error', duration: 3000 });
+      if (error.response && error.response.data.message === "Incorrect current password") {
+        setAlert({ message: 'Incorrect current password!', type: 'error', duration: 3000 });
+      } else {
+        setAlert({ message: 'Error updating password', type: 'error', duration: 3000 });
+      }
       console.error('Password change failed:', error);
     }
   };
+  
 
   return (
     <>
@@ -99,7 +105,7 @@ export default function PlayerProfilePage() {
             <InputGroup>
               <Input
                 type="password"
-                placeholder="Current Password"
+                placeholder="Current Password"  // Campo para senha atual
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 required
@@ -124,8 +130,8 @@ export default function PlayerProfilePage() {
               <Input
                 type="password"
                 placeholder="Confirm New Password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                value={confirmNewPassword}
+                onChange={(e) => setConfirmNewPassword(e.target.value)}
                 required
               />
               <InputIcon>
