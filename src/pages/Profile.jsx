@@ -3,15 +3,20 @@ import styled from 'styled-components';
 import { User, Lock, Camera } from 'lucide-react';
 import { Header } from '../components/Header.jsx';
 import AuthContext from '../functions/context.jsx';
+import axios from 'axios';
+import Alert from '../components/Alert';
+
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export default function PlayerProfilePage() {
   const [profilePicture, setProfilePicture] = useState('/placeholder.svg?height=150&width=150');
   const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [currentPassword, setCurrentPassword] = useState(''); // Senha atual
+  const [newPassword, setNewPassword] = useState(''); // Nova senha
+  const [confirmPassword, setConfirmPassword] = useState(''); // Confirmação de nova senha
+  const [alert, setAlert] = useState(null);
   const { user, setUser } = useContext(AuthContext);
 
-  // Pegar o usuário do localStorage e definir a foto e nome
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
@@ -19,7 +24,7 @@ export default function PlayerProfilePage() {
       setUser(parsedUser);
       setName(parsedUser.nome);
       if (parsedUser.foto) {
-        setProfilePicture(`data:image/jpeg;base64,${parsedUser.foto}`); // Supondo que a foto esteja em base64
+        setProfilePicture(`data:image/jpeg;base64,${parsedUser.foto}`);
       }
     }
   }, [setUser]);
@@ -35,9 +40,39 @@ export default function PlayerProfilePage() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Password change submitted');
+
+    if (newPassword !== confirmPassword) {
+      setAlert({ message: 'Passwords do not match!', type: 'error', duration: 3000 });
+      return;
+    }
+
+    try {
+      const storedUser = localStorage.getItem('user');
+      const token = storedUser ? JSON.parse(storedUser).token : null;
+
+      if (!token) {
+        setAlert({ message: 'User not authenticated', type: 'error', duration: 3000 });
+        return;
+      }
+
+      // Requisição para mudar a senha
+      await axios.put(`${apiUrl}/changepassword`, {
+        currentPassword, 
+        newPassword
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      setAlert({ message: 'Password updated successfully!', type: 'success', duration: 3000 });
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+    } catch (error) {
+      setAlert({ message: 'Error updating password', type: 'error', duration: 3000 });
+      console.error('Password change failed:', error);
+    }
   };
 
   return (
@@ -45,6 +80,7 @@ export default function PlayerProfilePage() {
       <Header />
       <PageContainer>
         <Title>Profile</Title>
+        {alert && <Alert message={alert.message} type={alert.type} duration={alert.duration} />}
         <ProfileContainer>
           <ProfilePictureContainer>
             <ProfilePicture src={profilePicture} alt="Player Avatar" />
@@ -63,9 +99,21 @@ export default function PlayerProfilePage() {
             <InputGroup>
               <Input
                 type="password"
+                placeholder="Current Password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                required
+              />
+              <InputIcon>
+                <Lock size={20} />
+              </InputIcon>
+            </InputGroup>
+            <InputGroup>
+              <Input
+                type="password"
                 placeholder="New Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
                 required
               />
               <InputIcon>

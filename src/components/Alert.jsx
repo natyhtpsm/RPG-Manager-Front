@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import styled, { keyframes } from 'styled-components'
 
-AlertProps = {
-  message: string,
-  duration: number,
-  type: 'success' | 'error' | 'info'
-}
-
 const fadeIn = keyframes`
   from {
     opacity: 0;
@@ -17,7 +11,6 @@ const fadeIn = keyframes`
     transform: translateY(0);
   }
 `
-
 const fadeOut = keyframes`
   from {
     opacity: 1;
@@ -29,7 +22,7 @@ const fadeOut = keyframes`
   }
 `
 
-const AlertContainer = styled.div<{ isVisible: boolean, type: string, }>`
+const AlertContainer = styled.div`
   position: fixed;
   top: 20px;
   left: 50%;
