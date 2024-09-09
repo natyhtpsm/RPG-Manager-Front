@@ -59,7 +59,7 @@ export const Header = () => {
                 <DropdownItem to="/characters">Characters</DropdownItem>
                 <DropdownItem to="/inventory">Inventory</DropdownItem>
                 <DropdownItem to="/quests">Quests</DropdownItem>
-                <DropdownItem onClick={handleLogout}>
+                <DropdownItem to="/" onClick={handleLogout}>
                   <LogOut size={16} />
                   Logout
                 </DropdownItem>
